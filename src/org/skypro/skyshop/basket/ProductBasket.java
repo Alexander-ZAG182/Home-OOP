@@ -29,6 +29,7 @@ public class ProductBasket {
         return sum;
     }
 
+
     public void printBasket() {
         int count = 0;
         for (int i = 0; i < this.basket.length; i++) {
