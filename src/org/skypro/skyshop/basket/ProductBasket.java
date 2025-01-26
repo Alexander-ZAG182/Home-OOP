@@ -5,6 +5,8 @@ import org.skypro.skyshop.product.Product;
 public class ProductBasket {
     private final Product[] basket;
 
+    public static final int NOT_FOUND = -1;
+
     public ProductBasket() {
         this.basket = new Product[5];
     }
@@ -29,12 +31,11 @@ public class ProductBasket {
         return sum;
     }
 
-
     public void printBasket() {
         int count = 0;
         for (int i = 0; i < this.basket.length; i++) {
             if (this.basket[i] != null) {
-                System.out.println(this.basket[i].getNameProduct() + " : " + this.basket[i].getCostProduct());
+                System.out.println(this.basket[i].toString());
                 count = count + 1;
             }
         }
@@ -43,7 +44,9 @@ public class ProductBasket {
         }
         if (count > 0) {
             System.out.println("Итого : " + sumBasket());
+            System.out.println("Специальных товаров: " + getSpecialProductCount());
         }
+
     }
 
     public boolean findProduct(String nameProduct) {
@@ -61,6 +64,37 @@ public class ProductBasket {
                 this.basket[i] = null;
             }
         }
+    }
+
+    public int getSpecialProductCount() {
+        int count = 0;
+        for (Product product : basket) {
+            if (product != null) {
+                if (product.isSpecial()) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    private int getFreeIndex() {
+        for (int i = 0; i < basket.length; i++) {
+            if (basket[i] == null) {
+                return i;
+            }
+        }
+        return NOT_FOUND;
+    }
+
+    private int getProductCount() {
+        int count = 0;
+        for (Product product : basket) {
+            if (basket != null) {
+                count++;
+            }
+        }
+        return count;
     }
 }
 
