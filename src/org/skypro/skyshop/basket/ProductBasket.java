@@ -46,7 +46,6 @@ public class ProductBasket {
             System.out.println("Итого : " + sumBasket());
             System.out.println("Специальных товаров: " + getSpecialProductCount());
         }
-
     }
 
     public boolean findProduct(String nameProduct) {
