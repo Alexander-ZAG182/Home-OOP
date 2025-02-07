@@ -6,12 +6,60 @@ import org.skypro.skyshop.basket.ProductBasket;
 import org.skypro.skyshop.product.SimpleProduct;
 import org.skypro.skyshop.product.FixPriceProduct;
 import org.skypro.skyshop.product.DiscountedProduct;
+import org.skypro.skyshop.search.BestResultNotFound;
 import org.skypro.skyshop.search.SearchEngine;
+import org.skypro.skyshop.search.Searchable;
 
 import java.util.Arrays;
 
 public class App {
     public static void main(String[] args) {
+        try {
+            Product invalidProduct1 = new SimpleProduct("", 1000000);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Ошибка: " + e.getMessage());
+        }
+        try {
+            Product invalidProduct2 = new DiscountedProduct("Яблоко", -100, 20);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Ошибка: " + e.getMessage());
+        }
+        try {
+            Product invalidProduct3 = new FixPriceProduct(null);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Ошибка: " + e.getMessage());
+        }
+        try {
+            Product invalidProduct4 = new DiscountedProduct("Груша", 200, -10);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Ошибка: " + e.getMessage());
+        }
+
+        try {
+            Product bike = new SimpleProduct("Велосипед", 13000);
+            Product apple = new DiscountedProduct("Яблоко", 500, 10);
+            Product banana = new FixPriceProduct("Банан");
+            Product water = new DiscountedProduct("Вода", 100, 20);
+            Product cheese = new FixPriceProduct("Сыр");
+
+            Product juice = new SimpleProduct("Сок", 350);
+
+            ProductBasket basket = new ProductBasket();
+
+            basket.addProduct(bike);
+            basket.addProduct(apple);
+            basket.addProduct(banana);
+            basket.addProduct(water);
+            basket.addProduct(cheese);
+            basket.addProduct(juice);
+
+            basket.printBasket();
+            System.out.println("Стоимость корзины : " + basket.sumBasket());
+
+        } catch (IllegalArgumentException e) {
+            System.out.println("Ошибка " + e.getMessage());
+        }
+
         Product bike = new SimpleProduct("Велосипед", 13000);
         Product apple = new DiscountedProduct("Яблоко", 500, 10);
         Product banana = new FixPriceProduct("Банан");
@@ -65,5 +113,20 @@ public class App {
 
         String searchQuery3 = "Лодка";
         System.out.println("Поиск \"" + searchQuery3 + "\": " + Arrays.toString(searchEngine.search(searchQuery3)));
+
+        try {
+            Searchable bestMatch = searchEngine.findBestMatch("Банан");
+            System.out.println("Найден лучший результат: " + bestMatch.getSearchTerm());
+        } catch (BestResultNotFound e) {
+            System.out.println(e.getMessage());
+        }
+
+        try {
+            Searchable bestMatch = searchEngine.findBestMatch("Лодка");
+            System.out.println("Найден лучший результат: " + bestMatch.getSearchTerm());
+        } catch (BestResultNotFound e) {
+            System.out.println(e.getMessage());
+        }
     }
+
 }
