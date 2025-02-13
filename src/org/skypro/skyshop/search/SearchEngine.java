@@ -3,6 +3,7 @@ package org.skypro.skyshop.search;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public final class SearchEngine {
     private final List<Searchable> searchables;
 
