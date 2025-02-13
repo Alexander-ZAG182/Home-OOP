@@ -11,6 +11,7 @@ import org.skypro.skyshop.search.SearchEngine;
 import org.skypro.skyshop.search.Searchable;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class App {
     public static void main(String[] args) {
@@ -52,6 +53,15 @@ public class App {
             basket.addProduct(water);
             basket.addProduct(cheese);
             basket.addProduct(juice);
+
+            List<Product> removedProducts = basket.removeProductByName("Яблоко");
+            System.out.println("Удаленные продукты: " + removedProducts);
+            basket.printBasket();
+
+            removedProducts = basket.removeProductByName("Лодка");
+            if (removedProducts.isEmpty()) {
+                System.out.println("Список пуст");
+            }
 
             basket.printBasket();
             System.out.println("Стоимость корзины : " + basket.sumBasket());
@@ -106,16 +116,16 @@ public class App {
         searchEngine.add(bikeArticle);
 
         String searchQuery1 = "Яблоко";
-        System.out.println("Поиск \"" + searchQuery1 + "\": " + Arrays.toString(searchEngine.search(searchQuery1)));
+        System.out.println("Поиск \"" + searchQuery1 + "\": " + searchEngine.search(searchQuery1));
 
         String searchQuery2 = "Велосипед";
-        System.out.println("Поиск \"" + searchQuery2 + "\": " + Arrays.toString(searchEngine.search(searchQuery2)));
+        System.out.println("Поиск \"" + searchQuery2 + "\": " + searchEngine.search(searchQuery2));
 
         String searchQuery3 = "Лодка";
-        System.out.println("Поиск \"" + searchQuery3 + "\": " + Arrays.toString(searchEngine.search(searchQuery3)));
+        System.out.println("Поиск \"" + searchQuery3 + "\": " + searchEngine.search(searchQuery3));
 
         try {
-            Searchable bestMatch = searchEngine.findBestMatch("Банан");
+            Searchable bestMatch = searchEngine.findBestMatch("Яблоко");
             System.out.println("Найден лучший результат: " + bestMatch.getSearchTerm());
         } catch (BestResultNotFound e) {
             System.out.println(e.getMessage());
@@ -128,5 +138,4 @@ public class App {
             System.out.println(e.getMessage());
         }
     }
-
 }
