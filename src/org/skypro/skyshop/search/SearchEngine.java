@@ -3,21 +3,21 @@ package org.skypro.skyshop.search;
 import java.util.*;
 
 public final class SearchEngine {
-    private final List<Searchable> searchables;
+    private final Set<Searchable> searchables;
 
     public SearchEngine(int size) {
-        this.searchables = new ArrayList<>(size);
+        this.searchables = new HashSet<>(size);
     }
 
     public SearchEngine() {
-        this.searchables = new ArrayList<>();
+        this.searchables = new HashSet<>();
     }
 
-    public Map<String, Searchable> search(String query) {
-        Map<String, Searchable> results = new TreeMap<>();
+    public Set<Searchable> search(String query) {
+        Set<Searchable> results = new TreeSet<>(new SearchableComparator());
         for (Searchable searchable : searchables) {
             if (searchable != null && searchable.getSearchTerm().contains(query)) {
-                results.put(searchable.getSearchTerm(), searchable);
+                results.add(searchable);
             }
         }
         return results;
