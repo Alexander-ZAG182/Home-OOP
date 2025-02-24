@@ -1,74 +1,78 @@
+
 package org.skypro.skyshop.basket;
 
 import org.skypro.skyshop.product.Product;
 
-public class ProductBasket {
-    private final Product[] basket;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.List;
+import java.util.*;
 
-    public static final int NOT_FOUND = -1;
+public class ProductBasket {
+    private final Map<String, List<Product>> basket;
 
     public ProductBasket() {
-        this.basket = new Product[5];
+        this.basket = new HashMap<>();
     }
 
     public void addProduct(Product product) {
-        for (int i = 0; i < this.basket.length; i++) {
-            if (this.basket[i] == null) {
-                this.basket[i] = product;
-                return;
-            }
+        if (product == null) {
+            throw new IllegalArgumentException("Продукт не может быть null");
         }
-        System.out.println("Не возможно добавить продукт!");
+        String productName = product.getNameProduct();
+        List<Product> products = basket.get(productName);
+        if (products == null) {
+            products = new ArrayList<>();
+            basket.put(productName, products);
+        }
+        products.add(product);
+    }
+
+    public List<Product> removeProductByName(String name) {
+        List<Product> removedProducts = basket.remove(name);
+        if (removedProducts != null) {
+            return removedProducts;
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     public int sumBasket() {
         int sum = 0;
-        for (int i = 0; i < this.basket.length; i++) {
-            if (this.basket[i] != null) {
-                sum = sum + this.basket[i].getCostProduct();
+        for (List<Product> products : basket.values()) {
+            for (Product product : products) {
+                sum += product.getCostProduct();
             }
         }
         return sum;
     }
 
     public void printBasket() {
-        int count = 0;
-        for (int i = 0; i < this.basket.length; i++) {
-            if (this.basket[i] != null) {
-                System.out.println(this.basket[i].toString());
-                count = count + 1;
+        if (basket.isEmpty()) {
+            System.out.println("В корзине пусто");
+        } else {
+            for (Map.Entry<String, List<Product>> entry : basket.entrySet()) {
+                for (Product product : entry.getValue()) {
+                    System.out.println(product.toString());
+                }
             }
-        }
-        if (count == 0) {
-            System.out.println("в корзине пусто");
-        }
-        if (count > 0) {
-            System.out.println("Итого : " + sumBasket());
+            System.out.println("Итого: " + sumBasket());
             System.out.println("Специальных товаров: " + getSpecialProductCount());
         }
     }
 
     public boolean findProduct(String nameProduct) {
-        for (int i = 0; i < this.basket.length; i++) {
-            if (this.basket[i] != null && nameProduct.equals(this.basket[i].getNameProduct())) {
-                return true;
-            }
-        }
-        return false;
+        return basket.containsKey(nameProduct);
     }
 
     public void cleanBasket() {
-        for (int i = 0; i < this.basket.length; i++) {
-            if (this.basket[i] != null) {
-                this.basket[i] = null;
-            }
-        }
+        basket.clear();
     }
 
     public int getSpecialProductCount() {
         int count = 0;
-        for (Product product : basket) {
-            if (product != null) {
+        for (List<Product> products : basket.values()) {
+            for (Product product : products) {
                 if (product.isSpecial()) {
                     count++;
                 }
@@ -77,25 +81,11 @@ public class ProductBasket {
         return count;
     }
 
-    private int getFreeIndex() {
-        for (int i = 0; i < basket.length; i++) {
-            if (basket[i] == null) {
-                return i;
-            }
-        }
-        return NOT_FOUND;
-    }
-
-    private int getProductCount() {
+    public int getProductCount() {
         int count = 0;
-        for (Product product : basket) {
-            if (basket != null) {
-                count++;
-            }
+        for (List<Product> products : basket.values()) {
+            count += products.size();
         }
         return count;
     }
 }
-
-
-
