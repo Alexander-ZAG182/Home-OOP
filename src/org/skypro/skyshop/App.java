@@ -11,7 +11,7 @@ import org.skypro.skyshop.search.SearchEngine;
 import org.skypro.skyshop.search.Searchable;
 
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 public class App {
     public static void main(String[] args) {
@@ -84,6 +84,9 @@ public class App {
         Article appleArticle = new Article("Статья о яблоках", "Яблоко - очень полезно");
         Article bikeArticle = new Article("Статья о велосипеде", "Велосипед - средство передвижения");
 
+        Article longArticle = new Article("Очень длинная статья о здоровом питании", "Здоровое питание - это важно");
+        Article shortArticle = new Article("Короткая статья", "Коротко и ясно");
+
         searchEngine.add(banana);
         searchEngine.add(bike);
         searchEngine.add(apple);
@@ -93,18 +96,51 @@ public class App {
         searchEngine.add(appleArticle);
         searchEngine.add(bikeArticle);
 
+        searchEngine.add(longArticle);
+        searchEngine.add(shortArticle);
+
+        // Добавление дубликата
+        searchEngine.add(apple);
+
         // Поиск по запросу
         String searchQuery1 = "Яблоко";
-        Map<String, Searchable> searchResults1 = searchEngine.search(searchQuery1);
-        System.out.println("Поиск \"" + searchQuery1 + "\": " + searchResults1);
+        Set<Searchable> searchResults1 = searchEngine.search(searchQuery1);
+        System.out.println("Поиск \"" + searchQuery1 + "\":");
+        for (Searchable result : searchResults1) {
+            System.out.println(result);
+        }
 
         String searchQuery2 = "Велосипед";
-        Map<String, Searchable> searchResults2 = searchEngine.search(searchQuery2);
-        System.out.println("Поиск \"" + searchQuery2 + "\": " + searchResults2);
+        Set<Searchable> searchResults2 = searchEngine.search(searchQuery2);
+        System.out.println("Поиск \"" + searchQuery2 + "\":");
+        for (Searchable result : searchResults2) {
+            System.out.println(result);
+        }
 
         String searchQuery3 = "Лодка";
-        Map<String, Searchable> searchResults3 = searchEngine.search(searchQuery3);
-        System.out.println("Поиск \"" + searchQuery3 + "\": " + searchResults3);
+        Set<Searchable> searchResults3 = searchEngine.search(searchQuery3);
+        System.out.println("Поиск \"" + searchQuery3 + "\":");
+        if (searchResults3.isEmpty()) {
+            System.out.println("Ничего не найдено");
+        } else {
+            for (Searchable result : searchResults3) {
+                System.out.println(result);
+            }
+        }
+
+        String searchQuery4 = "статья";
+        Set<Searchable> searchResults4 = searchEngine.search(searchQuery4);
+        System.out.println("Поиск \"" + searchQuery4 + "\" (проверка сортировки по длине названия):");
+        for (Searchable result : searchResults4) {
+            System.out.println(result);
+        }
+
+        String searchQuery5 = "Сок";
+        Set<Searchable> searchResults5 = searchEngine.search(searchQuery5);
+        System.out.println("Поиск \"" + searchQuery5 + "\" (проверка сортировки при одинаковой длине названия):");
+        for (Searchable result : searchResults5) {
+            System.out.println(result);
+        }
 
         // Поиск лучшего результата
         try {
