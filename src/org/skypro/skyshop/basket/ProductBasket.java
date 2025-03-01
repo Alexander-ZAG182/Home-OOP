@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.List;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ProductBasket {
     private final Map<String, List<Product>> basket;
@@ -38,24 +39,21 @@ public class ProductBasket {
     }
 
     public int sumBasket() {
-        int sum = 0;
-        for (List<Product> products : basket.values()) {
-            for (Product product : products) {
-                sum += product.getCostProduct();
-            }
-        }
-        return sum;
+        return basket.values()
+                .stream()
+                .flatMap(List::stream)
+                .mapToInt(Product::getCostProduct)
+                .sum();
     }
 
     public void printBasket() {
         if (basket.isEmpty()) {
             System.out.println("В корзине пусто");
         } else {
-            for (Map.Entry<String, List<Product>> entry : basket.entrySet()) {
-                for (Product product : entry.getValue()) {
-                    System.out.println(product.toString());
-                }
-            }
+            basket.values()
+                    .stream()
+                    .flatMap(List::stream)
+                    .forEach(System.out::println);
             System.out.println("Итого: " + sumBasket());
             System.out.println("Специальных товаров: " + getSpecialProductCount());
         }
@@ -70,22 +68,16 @@ public class ProductBasket {
     }
 
     public int getSpecialProductCount() {
-        int count = 0;
-        for (List<Product> products : basket.values()) {
-            for (Product product : products) {
-                if (product.isSpecial()) {
-                    count++;
-                }
-            }
-        }
-        return count;
+        return (int) basket.values()
+                .stream()
+                .flatMap(List::stream)
+                .filter(Product::isSpecial)
+                .count();
     }
 
     public int getProductCount() {
-        int count = 0;
-        for (List<Product> products : basket.values()) {
-            count += products.size();
-        }
-        return count;
+        return basket.values().stream()
+                .mapToInt(List::size)
+                .sum();
     }
 }
